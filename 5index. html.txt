@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0">
+
+<title>Ghost Hunt</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        <h1>👻 Ghost Hunt</h1>
+        <p>4 Player Online Horror Game</p>
+    </div>
+
+    <div class="loginBox">
+
+        <input
+            id="playerName"
+            type="text"
+            maxlength="15"
+            placeholder="Enter your name">
+
+        <input
+            id="roomId"
+            type="text"
+            maxlength="6"
+            placeholder="Room Code">
+
+        <button id="joinBtn">
+            Join Room
+        </button>
+
+        <button id="createBtn">
+            Create Room
+        </button>
+
+    </div>
+
+    <div class="status">
+
+        <h3>Status</h3>
+
+        <p id="statusText">
+            Waiting...
+        </p>
+
+    </div>
+
+</div>
+
+<script src="js/socket.js"></script>
+
+<script>
+
+const joinBtn=document.getElementById("joinBtn");
+const createBtn=document.getElementById("createBtn");
+
+joinBtn.onclick=()=>{
+
+    const player=document.getElementById("playerName").value.trim();
+
+    const room=document.getElementById("roomId").value.trim();
+
+    if(player===""||room===""){
+
+        alert("Enter Name and Room");
+
+        return;
+
+    }
+
+    joinRoom(player,room);
+
+}
+
+createBtn.onclick=()=>{
+
+    const player=document.getElementById("playerName").value.trim();
+
+    if(player===""){
+
+        alert("Enter Name");
+
+        return;
+
+    }
+
+    const room=Math.random()
+    .toString(36)
+    .substring(2,8)
+    .toUpperCase();
+
+    document.getElementById("roomId").value=room;
+
+    joinRoom(player,room);
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
+const cors = require("cors");
+const { v4: uuidv4 } = require("uuid");
+
+const app = express();
+const server = http.createServer(app);
+
+app.use(cors());
+app.use(express.json());
+
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
+
+// Store game rooms
+let rooms = {};
+
+app.get("/", (req, res) => {
+    res.send("Ghost Hunt Server Running");
+});
+
+// Player joins a room
+io.on("connection", (socket) => {
+
+    console.log("Player Connected:", socket.id);
+
+    socket.on("joinRoom", ({ roomId, playerName }) => {
+
+        if (!rooms[roomId]) {
+            rooms[roomId] = {
+                players: [],
+                started: false
+            };
+        }
+
+        const room = rooms[roomId];
+
+        if (room.players.length >= 4) {
+            socket.emit("roomFull");
+            return;
+        }
+
+        const player = {
+            id: socket.id,
+            name: playerName,
+            x: Math.floor(Math.random() * 500),
+            y: Math.floor(Math.random() * 500),
+            hp: 100,
+            role: "hunter",
+            invisible: false,
+            bullets: 0
+        };
+
+        room.players.push(player);
+
+        socket.join(roomId);
+
+        io.to(roomId).emit("playersUpdate", room.players);
+
+        console.log(playerName + " joined " + roomId);
+
+    });
+
+    // Start game
+    socket.on("startGame", (roomId) => {
+
+        const room = rooms[roomId];
+
+        if (!room) return;
+
+        if (room.players.length !== 4) return;
+
+        room.started = true;
+
+        // Random Ghost
+        const ghostIndex = Math.floor(Math.random() * 4);
+
+        room.players.forEach((p, index) => {
+
+            if (index === ghostIndex) {
+
+                p.role = "ghost";
+
+            } else {
+
+                p.role = "hunter";
+
+            }
+
+        });
+
+        io.to(roomId).emit("gameStarted", room.players);
+
+    });
+
+    // Movement
+    socket.on("movePlayer", ({ roomId, x, y }) => {
+
+        const room = rooms[roomId];
+
+        if (!room) return;
+
+        const player = room.players.find(p => p.id === socket.id);
+
+        if (!player) return;
+
+        player.x = x;
+        player.y = y;
+
+        io.to(roomId).emit("playersUpdate", room.players);
+
+    });
+
+    // Chat
+    socket.on("chat", ({ roomId, message, name }) => {
+
+        io.to(roomId).emit("chat", {
+            name,
+            message
+        });
+
+    });
+
+    // Disconnect
+    socket.on("disconnect", () => {
+
+        console.log("Disconnected:", socket.id);
+
+        for (const roomId in rooms) {
+
+            rooms[roomId].players =
+                rooms[roomId].players.filter(
+                    p => p.id !== socket.id
+                );
+
+            io.to(roomId).emit(
+                "playersUpdate",
+                rooms[roomId].players
+            );
+
+            if (rooms[roomId].players.length === 0) {
+                delete rooms[roomId];
+            }
+
+        }
+
+    });
+
+});
+
+const PORT = process.env.PORT || 3000;
+
+server.listen(PORT, () => {
+
+    console.log("================================");
+    console.log(" Ghost Hunt Server Running ");
+    console.log(" Port:", PORT);
+    console.log("================================");
+
+});

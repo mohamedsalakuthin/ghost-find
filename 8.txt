@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1.0,user-scalable=no">
+
+<title>Ghost Hunt</title>
+
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/game.css">
+
+<script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+
+</head>
+
+<body>
+
+<div id="game">
+
+    <!-- TOP BAR -->
+
+    <div id="topBar">
+
+        <div id="playerInfo">
+
+            <h3 id="playerName">
+                Player
+            </h3>
+
+            <p id="playerRole">
+                Hunter
+            </p>
+
+        </div>
+
+        <div id="hpBox">
+
+            ❤️
+
+            <div id="hpBar">
+
+                <div id="hpFill"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- GAME MAP -->
+
+    <div id="map">
+
+        <div id="player"></div>
+
+    </div>
+
+    <!-- RIGHT BUTTONS -->
+
+    <div id="actions">
+
+        <button id="attackBtn">
+
+            ⚔
+
+        </button>
+
+        <button id="ghostBtn">
+
+            👻
+
+        </button>
+
+        <button id="gunBtn">
+
+            🔫
+
+        </button>
+
+        <button id="cameraBtn">
+
+            📹
+
+        </button>
+
+        <button id="meetingBtn">
+
+            🗳
+
+        </button>
+
+        <button id="chatBtn">
+
+            💬
+
+        </button>
+
+    </div>
+
+    <!-- JOYSTICK -->
+
+    <div id="joystick">
+
+        <button id="up">▲</button>
+
+        <div>
+
+            <button id="left">◀</button>
+
+            <button id="right">▶</button>
+
+        </div>
+
+        <button id="down">▼</button>
+
+    </div>
+
+</div>
+
+<script>
+
+document.getElementById("playerName").innerHTML =
+localStorage.getItem("playerName");
+
+document.getElementById("playerRole").innerHTML =
+localStorage.getItem("role");
+
+</script>
+
+<script src="js/game.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,51 @@
+let gun = {
+    x: 450,
+    y: 250,
+    picked: false,
+    owner: null
+};
+
+let hasGun = false;
+
+const gunElement = document.createElement("div");
+gunElement.id = "gun";
+gunElement.innerHTML = "🔫";
+
+gunElement.style.position = "absolute";
+gunElement.style.left = gun.x + "px";
+gunElement.style.top = gun.y + "px";
+gunElement.style.fontSize = "30px";
+
+document.getElementById("map").appendChild(gunElement);
+
+// Check if player is close enough
+function checkGunPickup() {
+
+    if (hasGun) return;
+    if (gun.picked) return;
+
+    const dx = x - gun.x;
+    const dy = y - gun.y;
+
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    if (distance < 40) {
+
+        socket.emit("pickupGun", {
+            roomId: roomId
+        });
+
+    }
+
+}
+
+// Call after every movement
+function updatePlayerMovement() {
+
+    drawPlayer();
+
+    sendMovement();
+
+    checkGunPickup();
+
+}

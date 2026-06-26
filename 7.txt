@@ -1,0 +1,101 @@
+// Change this when you deploy your server.
+// Local development:
+const SERVER_URL = "http://localhost:3000";
+
+const socket = io(SERVER_URL);
+
+let currentPlayer = "";
+let currentRoom = "";
+
+function setStatus(text){
+    document.getElementById("statusText").innerText = text;
+}
+
+function joinRoom(playerName, roomId){
+
+    currentPlayer = playerName;
+    currentRoom = roomId;
+
+    setStatus("Connecting...");
+
+    socket.emit("joinRoom",{
+        roomId:roomId,
+        playerName:playerName
+    });
+
+}
+
+socket.on("connect",()=>{
+
+    console.log("Connected");
+
+    setStatus("Connected");
+
+});
+
+socket.on("disconnect",()=>{
+
+    setStatus("Disconnected");
+
+});
+
+socket.on("roomFull",()=>{
+
+    alert("Room is Full (4 Players)");
+
+});
+
+socket.on("playersUpdate",(players)=>{
+
+    setStatus(
+        "Players in Room : " + players.length + "/4"
+    );
+
+    console.log(players);
+
+    // Save room locally
+    localStorage.setItem(
+        "roomId",
+        currentRoom
+    );
+
+    localStorage.setItem(
+        "playerName",
+        currentPlayer
+    );
+
+    // Host can start automatically when 4 players join
+    if(players.length===4){
+
+        socket.emit("startGame",currentRoom);
+
+    }
+
+});
+
+socket.on("gameStarted",(players)=>{
+
+    console.log(players);
+
+    const me = players.find(
+        p=>p.name===currentPlayer
+    );
+
+    if(me){
+
+        localStorage.setItem(
+            "role",
+            me.role
+        );
+
+    }
+
+    window.location.href="game.html";
+
+});
+
+socket.on("chat",(data)=>{
+
+    console.log(data.name + ": " + data.message);
+
+});

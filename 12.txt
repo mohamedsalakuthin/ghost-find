@@ -1,0 +1,77 @@
+// ===========================
+// Ghost Ability System
+// ===========================
+
+const ghostButton = document.getElementById("ghostBtn");
+
+let isGhost = false;
+
+let invisible = false;
+
+let canUsePower = true;
+
+const INVISIBLE_TIME = 10000;   // 10 seconds
+
+const COOLDOWN = 30000;         // 30 seconds
+
+// Read role
+
+if(localStorage.getItem("role")==="ghost"){
+
+    isGhost = true;
+
+}else{
+
+    ghostButton.style.display="none";
+
+}
+
+// Activate power
+
+ghostButton.onclick=()=>{
+
+    if(!isGhost) return;
+
+    if(!canUsePower) return;
+
+    invisible = true;
+
+    canUsePower = false;
+
+    ghostButton.innerHTML="👻 ON";
+
+    player.style.opacity="0.15";
+
+    socket.emit("ghostInvisible",{
+
+        roomId,
+
+        invisible:true
+
+    });
+
+    setTimeout(()=>{
+
+        invisible=false;
+
+        player.style.opacity="1";
+
+        ghostButton.innerHTML="👻";
+
+        socket.emit("ghostInvisible",{
+
+            roomId,
+
+            invisible:false
+
+        });
+
+    },INVISIBLE_TIME);
+
+    setTimeout(()=>{
+
+        canUsePower=true;
+
+    },COOLDOWN);
+
+};

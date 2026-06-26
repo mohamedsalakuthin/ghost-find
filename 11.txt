@@ -1,0 +1,72 @@
+const map = document.getElementById("map");
+
+// Stores all player elements
+const playerSprites = {};
+
+// Draw or update every player
+function renderPlayers(players) {
+
+    players.forEach(player => {
+
+        let sprite = playerSprites[player.id];
+
+        // Create player element if it doesn't exist
+        if (!sprite) {
+
+            sprite = document.createElement("div");
+
+            sprite.className = "player";
+
+            sprite.id = player.id;
+
+            const name = document.createElement("span");
+
+            name.className = "playerName";
+
+            name.innerText = player.name;
+
+            sprite.appendChild(name);
+
+            map.appendChild(sprite);
+
+            playerSprites[player.id] = sprite;
+
+        }
+
+        // Update position
+        sprite.style.left = player.x + "px";
+        sprite.style.top = player.y + "px";
+
+        // Color by role (for testing only)
+        // In the real game, only the ghost should know they're the ghost.
+        if (player.role === "ghost") {
+            sprite.style.background = "#ff3b30";
+        } else {
+            sprite.style.background = "#00bfff";
+        }
+
+        // Hide player if invisible
+        if (player.invisible) {
+            sprite.style.opacity = "0.2";
+        } else {
+            sprite.style.opacity = "1";
+        }
+
+    });
+
+    // Remove disconnected players
+    Object.keys(playerSprites).forEach(id => {
+
+        const exists = players.find(p => p.id === id);
+
+        if (!exists) {
+
+            playerSprites[id].remove();
+
+            delete playerSprites[id];
+
+        }
+
+    });
+
+}

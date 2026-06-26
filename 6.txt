@@ -1,0 +1,189 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+
+    background:#111;
+
+    background-image:
+    radial-gradient(circle at top,#2d2d2d,#111);
+
+    color:white;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    min-height:100vh;
+
+}
+
+.container{
+
+    width:95%;
+    max-width:420px;
+
+    background:#1b1b1b;
+
+    border-radius:20px;
+
+    padding:25px;
+
+    box-shadow:
+    0 0 25px rgba(0,255,255,.15);
+
+}
+
+.logo{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+.logo h1{
+
+    font-size:38px;
+
+    color:#00ffe1;
+
+}
+
+.logo p{
+
+    margin-top:10px;
+
+    color:#cccccc;
+
+}
+
+.loginBox{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+input{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2d2d2d;
+
+    color:white;
+
+    font-size:18px;
+
+}
+
+input:focus{
+
+    outline:none;
+
+    border:2px solid #00ffe1;
+
+}
+
+button{
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    transition:.3s;
+
+}
+
+#joinBtn{
+
+    background:#00ffe1;
+
+    color:black;
+
+}
+
+#createBtn{
+
+    background:#6d28d9;
+
+    color:white;
+
+}
+
+button:hover{
+
+    transform:scale(1.05);
+
+}
+
+.status{
+
+    margin-top:30px;
+
+    background:#2a2a2a;
+
+    padding:15px;
+
+    border-radius:10px;
+
+}
+
+.status h3{
+
+    margin-bottom:10px;
+
+    color:#00ffe1;
+
+}
+
+#statusText{
+
+    color:#dddddd;
+
+}
+
+@media(max-width:600px){
+
+.logo h1{
+
+    font-size:30px;
+
+}
+
+button{
+
+    font-size:16px;
+
+}
+
+input{
+
+    font-size:16px;
+
+}
+
+}

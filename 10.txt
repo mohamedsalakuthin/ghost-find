@@ -1,0 +1,87 @@
+const socket = io("http://localhost:3000");
+
+const player = document.getElementById("player");
+
+const roomId = localStorage.getItem("roomId");
+const playerName = localStorage.getItem("playerName");
+
+let x = 200;
+let y = 200;
+
+const speed = 6;
+
+// Join the room
+socket.emit("joinRoom", {
+    roomId: roomId,
+    playerName: playerName
+});
+
+// Draw player
+function drawPlayer() {
+    player.style.left = x + "px";
+    player.style.top = y + "px";
+}
+
+drawPlayer();
+
+// Send movement to server
+function sendMovement() {
+
+    socket.emit("movePlayer", {
+        roomId: roomId,
+        x: x,
+        y: y
+    });
+
+}
+
+// Up
+document.getElementById("up").addEventListener("click", () => {
+
+    y -= speed;
+
+    drawPlayer();
+
+    sendMovement();
+
+});
+
+// Down
+document.getElementById("down").addEventListener("click", () => {
+
+    y += speed;
+
+    drawPlayer();
+
+    sendMovement();
+
+});
+
+// Left
+document.getElementById("left").addEventListener("click", () => {
+
+    x -= speed;
+
+    drawPlayer();
+
+    sendMovement();
+
+});
+
+// Right
+document.getElementById("right").addEventListener("click", () => {
+
+    x += speed;
+
+    drawPlayer();
+
+    sendMovement();
+
+});
+
+// Receive all player positions
+socket.on("playersUpdate", (players) => {
+
+    console.log(players);
+
+});
